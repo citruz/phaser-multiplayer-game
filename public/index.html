@@ -3,7 +3,7 @@
 <head> 
 	<meta charset="UTF-8" />
 	<title>Phaser - Getting started</title>
-	<script type="text/javascript" src="js/phaser.min.js"></script>
+	<script type="text/javascript" src="bower_components/phaser/build/phaser.min.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -53,7 +53,7 @@ RemotePlayer.prototype.update = function() {
     this.lastPosition.y = this.player.y;
 };
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game("100", "100", Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
 function preload () {
     game.load.image('earth', 'assets/light_sand.png');
@@ -75,19 +75,22 @@ var cursors;
 
 function create () {
 
-    socket = io.connect("http://franciscodias.net", {port: 8120, transports: ["websocket"]});
+    socket = io.connect("localhost", {port: 8120, transports: ["websocket"]});
 
     //  Resize our game world to be a 2000 x 2000 square
-    game.world.setBounds(-500, -500, 1000, 1000);
+    game.world.setBounds(-500, -500, 2000, 2000);
 
     //  Our tiled scrolling background
-    land = game.add.tileSprite(0, 0, 800, 600, 'earth');
+    land = game.add.tileSprite(0, 0, 2000, 2000, 'earth');
     land.fixedToCamera = true;
 
     //  The base of our player
     var startX = Math.round(Math.random()*(1000)-500),
         startY = Math.round(Math.random()*(1000)-500);
     player = game.add.sprite(startX, startY, 'dude');
+    
+    game.physics.enable(player)
+
     player.anchor.setTo(0.5, 0.5);
     player.animations.add('move', [0,1,2,3,4,5,6,7], 20, true);
     player.animations.add('stop', [3], 20, true);
@@ -220,7 +223,7 @@ function update () {
 
     if (currentSpeed > 0)
     {
-        game.physics.velocityFromRotation(player.rotation, currentSpeed, player.body.velocity);
+        game.physics.arcade.velocityFromRotation(player.rotation, currentSpeed, player.body.velocity);
     
         player.animations.play('move');
     } 

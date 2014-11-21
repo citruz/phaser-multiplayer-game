@@ -17,6 +17,8 @@ var socket,		// Socket controller
 ** GAME INITIALISATION
 **************************************************/
 function init() {
+	util.log("initializing game server.");
+
 	// Create an empty array to store players
 	players = [];
 
